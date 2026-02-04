@@ -2,4 +2,3 @@ node_modules/
 coverage/
 .env
 .DS_Store
-package-lock.json
