@@ -1,15 +1,26 @@
 import { Sequelize } from "sequelize";
 
-const port = process.env.DB_PORT ? Number(process.env.DB_PORT) : undefined;
+const dialect = process.env.DB_DIALECT || "postgres";
 
-export const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    port,
-    dialect: "postgres",
-    logging: false,
-  },
-);
+const common = {
+  logging: false,
+};
+
+export const sequelize =
+  dialect === "sqlite"
+    ? new Sequelize({
+        dialect: "sqlite",
+        storage: process.env.SQLITE_STORAGE || ":memory:",
+        ...common,
+      })
+    : new Sequelize(
+        process.env.DB_NAME,
+        process.env.DB_USER,
+        process.env.DB_PASSWORD,
+        {
+          host: process.env.DB_HOST,
+          port: process.env.DB_PORT ? Number(process.env.DB_PORT) : undefined,
+          dialect: "postgres",
+          ...common,
+        },
+      );
