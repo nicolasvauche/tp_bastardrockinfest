@@ -1,0 +1,36 @@
+stages:
+  - lint
+  - test
+
+default:
+  image: node:20
+  cache:
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - .yarn/cache/
+      - node_modules/
+  before_script:
+    - corepack enable
+    - yarn --version
+    - yarn install --immutable
+    # - yarn install --frozen-lockfile
+
+lint:
+  stage: lint
+  script:
+    - yarn lint
+  rules:
+    # Merge Request pipelines (création + updates)
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    # Push/merge sur dev
+    - if: $CI_COMMIT_BRANCH == "dev"
+
+test:
+  stage: test
+  script:
+    - yarn test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "dev"
