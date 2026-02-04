@@ -3,6 +3,14 @@ import { FestivalEdition, Budget, Category, BudgetLine } from "./models.js";
 
 export const router = express.Router();
 
+/* Health */
+router.get("/", async (req, res) => {
+  res.json({
+    message: "Welcome to Bastard Rockin Fest API",
+    status: "ready",
+  });
+});
+
 /* Festival editions */
 router.post("/festival-editions", async (req, res) => {
   try {
